@@ -9,7 +9,7 @@ import uuid
 import time
 import logging
 import gfortune
-import Icmd
+import IPcmd
 #from wsgilog import log
 
 from flask import Flask, jsonify, abort, request, make_response, url_for, g, Response, json, redirect, render_template
@@ -50,7 +50,7 @@ def not_found(error):
 @app.route('/form', methods = [ 'GET','POST'])
 def form():
 
-    cresp = Icmd.scmd(command)
+    cresp = IPcmd.scmd(command)
     return render_template('form.html')
     #return "Text Message recieved: " + request.data
 
@@ -65,7 +65,7 @@ def form_action():
 def gresponse():
     command = request.form['command']
 
-    cresp = Icmd.scmd(command)
+    cresp = IPcmd.scmd(command)
     return gresp
     #return render_template('formaction.html')
 
@@ -79,7 +79,7 @@ def api_test():
 def incoming():
 
     command = request.get_data()
-    cresp = Icmd.scmd(command) #+ "\n"
+    cresp = IPcmd.scmd(command) #+ "\n"
     #time.sleep(2)
     return cresp
 
