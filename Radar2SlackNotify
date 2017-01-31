@@ -1,0 +1,135 @@
+#!/usr/bin/env python
+
+
+import urllib2
+import simplejson
+import base64
+import pprint
+import requests
+import time
+import sys
+import re
+import simplejson as json
+
+STOP = "false"
+
+def derp():
+
+        username = 'yourusername'
+        password = 'yourpassword'
+        PAAS = 'https://your.ipcenter.com/IPradar/update.htm?ticketID='
+
+        request = urllib2.Request("https://api-your.ipcenter.com/IPradar/v1/queue;queue=1;clients;clients=ClientID")
+# You need the replace to handle encodestring adding a trailing newline 
+# (https://docs.python.org/2/library/base64.html#base64.encodestring)
+        base64string = base64.encodestring('%s:%s' % (username, password)).replace('\n', '')
+        request.add_header("Authorization", "Basic %s" % base64string)
+        result = urllib2.urlopen(request)
+
+        data = simplejson.load(result)
+
+        default = 'None'
+        department = "none"
+        queuename = "none"
+        owner = "none"
+        pasteta = "none"
+        ipimID = "none"
+        ticketID = "none"
+        plevel= "P5"
+        description = "N/A"
+        space = ""
+        
+          #return data
+
+        class Ticket:
+
+                def __init__(self  ):
+                        self.ipimid = ""
+                        self.owner = ""
+                        self.ticketid = ""
+                        self.plevel = ""
+                        self.description = ""
+                        self.space = " "
+
+                def __str__(self):
+                        out =  self.owner + self.space + self.description + self.space + PAAS + str(self.ticketid)
+                        return out
+
+
+
+        tickets = []
+
+        for i in data:
+                try:
+
+
+                        ticketID = i["ticketID"]
+                        if not ticketID:
+                                ticketID = "hurrdurr"
+                        description = i["description"]
+                        #ipimID = i["ipimID"]
+                        #if not ipimID:
+                        #       ipimID = "NoIPIM"
+
+                        Tmp = Ticket()
+                        Tmp.ticketid = ticketID
+                        Tmp.description = description
+                        Tmp.ipimID = ipimID
+                        #return Tmp
+                        tickets.append(Tmp)
+
+                except KeyError as e:
+                        yield e
+
+        if not tickets:
+                yield 0
+
+
+        for i in tickets: yield i
+
+#print derp()
+tckData = list(derp())
+
+def AlertGoose():
+        Slack = "https://hooks.slack.com/services/your+hook+string"
+
+
+        url = Slack
+        headers = {'Content-type': 'application/json'}
+        HONK = "HOOONK HONK Monitoring Alert"
+        hdata = {'text':  HONK  }
+
+        #Honk Post
+        #r = requests.post(url, data=json.dumps(hdata), headers=headers)
+
+        #ticket data post
+
+        for i in tckData:
+
+
+                line = str(i)
+                if re.search('ihg', line) :
+                        #r = requests.post(url, data=json.dumps(hdata), headers=headers)
+                        #print line
+                        data = {'text':  line  }
+                        headers = {'Content-type': 'application/json'}
+                        r = requests.post(url, data=json.dumps(data), headers=headers)
+                        time.sleep(1)
+
+                else:
+                        print "No Client data"
+
+
+
+for i in tckData:
+        if i == 0:
+                print "No Client ticket data at this time"
+                exit()
+        else:
+                line = str(i)
+                if re.search('abc', line) :
+                        print line
+
+
+AlertGoose()
+
