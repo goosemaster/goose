@@ -1,0 +1,18 @@
+#!/bin/bash
+:
+# trap ctrl-c and call ctrl_c()
+trap ctrl_c INT
+
+function ctrl_c() {
+        echo "** Trapped CTRL-C Cancelling"
+
+pkill -P $$
+exit 0
+
+}
+
+
+
+ssh-copy-id -i /home/username/.ssh/id_rsa.pub username@$1
+
+echo "done"
