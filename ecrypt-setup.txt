@@ -1,0 +1,19 @@
+#!/bin/bash
+
+ecryptfs-migrate-home -u $1
+
+
+#!/bin/bash
+:
+# Create TMPFS ramdisk for encrypted swap
+
+#mkdir /mnt/ramdisk
+#mount -t tmpfs -o size=1024m tmpfs /mnt/ramdisk
+#dd if=/dev/zero of=/mnt/ramdisk/swapfile count=1999999 #1023gb
+
+
+fallocate -l 1G /swapfile
+chmod 0600
+mkswap /swapfile
+swapon /swapfile
+ecryptfs-setup-swap
