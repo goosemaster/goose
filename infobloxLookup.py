@@ -11,6 +11,8 @@ import re
 import json
 import requests
 from requests import Request, Session
+import netaddr
+from netaddr import EUI
 
 try:
         ARG = sys.argv[1]
@@ -29,6 +31,8 @@ fix2 = re.sub(r'00', '0', fix)
 fix3 = fix2.lower()
 remoteid = "a" + fix3
 #print(remoteid) #Uncomment to debug
+mac = EUI(remoteid)
+mac.dialect = netaddr.mac_unix
 
 def send_request():
     # Infoblox - Search by SM MAC
@@ -38,7 +42,7 @@ def send_request():
     payload = {
         "_return_type": "json-pretty",
         "_return_fields": "address",
-        "remote_id": remoteid
+        "remote_id": mac
         }
 
     with requests.session() as s:
