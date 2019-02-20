@@ -10,7 +10,6 @@ key = Fernet.generate_key()
 f = Fernet(key)
 token = f.encrypt(MSGBYTES)
 token
-f = Fernet(key)
 DEC = f.decrypt(token)
 
 #print(DEC)
