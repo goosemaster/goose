@@ -1,7 +1,7 @@
 #!/bin/bash
 :
 # Place this script in  /usr/local/bin/ as startx11vnc.sh
-# create a vncpasswd 
+# create a vncpasswd first
 #x11vnc -passwdfile /root/.vnc/passwd
 
 
