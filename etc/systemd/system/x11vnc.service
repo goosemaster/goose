@@ -1,0 +1,8 @@
+[Unit]
+After=xdm.service
+
+[Service]
+ExecStart=/usr/local/bin/startx11vnc.sh
+
+[Install]
+WantedBy=default.target
