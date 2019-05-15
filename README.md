@@ -1,2 +1,2 @@
 # goose
-misc scripts
+misc scripts / files  and configs
